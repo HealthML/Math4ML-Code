@@ -37,16 +37,6 @@ class OLS:
         residuals = y - y_pred
         mse = np.mean(residuals*residuals)
         return mse
-    
-    def p_norm_loss(self, x=None, y=None, p=2):
-        if x is None:
-            x = self.x
-        if y is None:
-            y = self.y
-        y_pred = self.pred(x)
-        residuals = y - y_pred
-        mse = np.mean(np.absolute(residuals).power(p))
-        return mse
 
     def score(self, x=None, y=None):
         return -self.mse(x=x, y=y)
