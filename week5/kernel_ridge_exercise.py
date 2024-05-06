@@ -7,7 +7,7 @@ class KernelRidgeRegressionEx:
     Attributes:
         ridge (float): Regularization parameter.
         N (int): Number of samples.
-        Ky (numpy.ndarray): Coefficients of the fitted model.
+        alpha (numpy.ndarray): Coefficients of the fitted model.
     """
     def __init__(self, ridge=0.0):
         """
@@ -18,7 +18,7 @@ class KernelRidgeRegressionEx:
         """
         self.ridge = ridge
         self.N = None
-        self.Ky = None
+        self.alpha = None
     
     def fit(self, K, y):
         """
@@ -32,7 +32,7 @@ class KernelRidgeRegressionEx:
             The method computes the coefficients of the model using the provided kernel matrix and target variable.
         """
         self.N = K.shape[0]
-        # self.Ky = Please implement me as an exercise
+        # self.alpha = Please implement me as an exercise
     
     def pred(self, K_star):
         """
