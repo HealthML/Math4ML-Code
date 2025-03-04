@@ -28,7 +28,7 @@ if __name__ == "__main__":
         X_reconstruction = pca_lowrank.reverse_transform(X_lowrank)
         print("L1 reconstruction error for rank %i PCA : %.4E " % (rank, np.absolute(X - X_reconstruction).sum()))
 
-    plt.ion()
+    # plt.ion()
     fig = plt.figure()
     plt.plot(X_pc[y=="M"][:,0], X_pc[y=="M"][:,1],'.', alpha = 0.3)
     plt.plot(X_pc[y=="B"][:,0], X_pc[y=="B"][:,1],'.', alpha = 0.3)
@@ -61,3 +61,4 @@ if __name__ == "__main__":
     plt.xlabel("PC dimension")
     plt.ylabel("cumulative fraction of variance explained")
 
+    plt.show()
