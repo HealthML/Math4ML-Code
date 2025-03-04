@@ -10,7 +10,7 @@ def load_temperature_data(year = None):
     """
 
     names = ['station', 'date' , 'type', 'measurement', 'e1','e2', 'E', 'e3']
-    data = pd.read_csv('../datasets/weatherstations/GM000003342.csv', names = names)
+    data = pd.read_csv('/home/arek/Desktop/math4ml all/Math4ML-Code/datasets/weatherstations/GM000003342.csv', names = names, low_memory=False) 
     # convert the date column to datetime format
     data['date'] = pd.to_datetime(data['date'], format="%Y%m%d") # 47876 unique days
     types = data['type'].unique()
@@ -25,7 +25,7 @@ def load_temperature_data(year = None):
     df = pd.DataFrame(arr/10.0, index=tmin.date, columns=['TMAX', 'TMIN', 'PRCP']) # compile data in a dataframe and convert temperatures to degrees C, precipitation to mm
 
     if year is not None:
-        df = df[pd.datetime(year,1,1):pd.datetime(year,12,31)]
+        df = df[pd.to_datetime(f'{year}-1-1'):pd.to_datetime(f'{year}-12-31')]
     
     df['days'] = (df.index - df.index.min()).days
     return df
