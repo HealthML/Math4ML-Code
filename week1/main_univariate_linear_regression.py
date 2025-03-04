@@ -10,7 +10,7 @@ def load_temperature_data(year = None):
     """
 
     names = ['station', 'date' , 'type', 'measurement', 'e1','e2', 'E', 'e3']
-    data = pd.read_csv('/home/arek/Desktop/math4ml all/Math4ML-Code/datasets/weatherstations/GM000003342.csv', names = names, low_memory=False) 
+    data = pd.read_csv('../datasets/weatherstations/GM000003342.csv', names = names)
     # convert the date column to datetime format
     data['date'] = pd.to_datetime(data['date'], format="%Y%m%d") # 47876 unique days
     types = data['type'].unique()
