@@ -81,7 +81,6 @@ if __name__ == "__main__":
         plt.title("Year : %i        N : %i" % (year, N_train))
         
         return (fig, reg)
-    plt.ion()
     N = 150
     fig, reg = plot_regression(N)
     plt.show()
