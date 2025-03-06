@@ -8,7 +8,7 @@ def load_data(year = None):
     load data from a weather station in Potsdam
     """
     names = ['station', 'date' , 'type', 'measurement', 'e1','e2', 'E', 'e3']
-    data = pd.read_csv('../datasets/weatherstations/GM000003342.csv', names = names)
+    data = pd.read_csv('./datasets/weatherstations/GM000003342.csv', names = names)
     # convert the date column to datetime format
     data['date'] = pd.to_datetime(data['date'], format="%Y%m%d") # 47876 unique days
     types = data['type'].unique()
@@ -23,7 +23,7 @@ def load_data(year = None):
     df = pd.DataFrame(arr/10.0, index=tmin.date, columns=['TMAX', 'TMIN', 'PRCP']) # compile data in a dataframe and convert temperatures to degrees C, precipitation to mm
 
     if year is not None:
-        df = df[pd.datetime(year,1,1):pd.datetime(year,12,31)]
+        df = df[pd.to_datetime(f'{year}-1-1'):pd.to_datetime(f'{year}-12-31')]
     
     df['days'] = (df.index - df.index.min()).days
     return df
@@ -66,7 +66,7 @@ def plot_poly(degree = 3, N_train = 10):
     return (fig, reg)
 
 
-degree = 10
+degree = 4
 N_train = 100
 x_train = data_train.days.values[:N_train] * 1.0
 y_train = data_train.TMAX.values[:N_train]
@@ -82,7 +82,6 @@ x_test = data_test.days.values * 1.0
 y_test = data_test.TMAX.values
 y_test_pred = reg.pred(x_test)
 
-plt.ion()
 fig = plt.figure()
 plt.plot(x_train,y_train,'.')
 plt.plot(x_days,y_days_pred)
@@ -91,4 +90,5 @@ plt.ylim([-27,39])
 plt.xlabel("day of the year")
 plt.ylabel("Maximum Temperature - degree C")
 plt.title("degree : %i, N : %i" % (degree,N_train))
+plt.show()
 
