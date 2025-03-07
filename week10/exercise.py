@@ -38,7 +38,7 @@ class PPCA():
         '''
         Sample from p(z) distribution
         '''
-        model = stats.multivariate_normal(np.zeros(shape = self.M), np.eye(self.M))
+        distribution = stats.multivariate_normal(np.zeros(shape = self.M), np.eye(self.M))
         return distribution.rvs()
     def sample_x_given_z(self, z):
         '''
