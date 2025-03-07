@@ -1,12 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-import os
-os.environ["KERAS_BACKEND"] = "torch"
-from keras.datasets import mnist
-
-
-
+from sklearn.datasets import fetch_openml
 
 class PPCA():
     '''
@@ -91,11 +86,17 @@ class PPCA_CF(PPCA):
 if __name__ == "__main__":
     # Sample from p(x) distribution
 
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+    # Fetch MNIST data
+    mnist = fetch_openml('mnist_784', version=1, as_frame=False)
+
+    # Extract data and labels
+    x_train, y_train = mnist['data'], mnist['target']
+
     x_train = x_train / 255
-    x_train = x_train.reshape(60000, -1)
-    x_train = x_train[((y_train == 8) + (y_train == 1)),:]
-    y_train = y_train[((y_train == 8) + (y_train == 1))]
+    x_train = x_train.reshape(70000, -1)
+    x_train = x_train[((y_train == '8') + (y_train == '1')),:]
+    y_train = y_train[((y_train == '8') + (y_train == '1'))]
 
     model = PPCA_CF(x_train, 2)
 
