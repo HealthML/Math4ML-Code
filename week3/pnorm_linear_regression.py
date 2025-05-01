@@ -1,65 +1,165 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def generate_dataset(w):
-    x = np.linspace(-5,5, 15)
-    y = w[0]*x + w[1] + np.random.normal(size=x.shape)
+def generate_dataset(w, noise=True, outliers=True):
 
-    x = np.append(x, [5, 4.5])
-    y = np.append(y, [-4, -4])
+    x = np.linspace(-5, 5, 15)
+    y = w[0]*x + w[1]*x**2 + w[2] + (np.random.normal(size=x.shape) if noise else 0)
 
-    x = x[:,None]
-    y = y[:,None]
+    # To make things spicier, we add some outliers
+    if outliers:
+        x = np.append(x, [4.8, -4.7])
+        y = np.append(y, [15, -10])
 
-    X = np.hstack((x, np.ones_like(x)))
+    x = x[:, None]
+    y = y[:, None]
+
+    X = np.hstack((x, x**2, np.ones_like(x)))
     return X, y
 
+def get_loss(X, y, w, p=2):
+    """
+    Compute loss.
 
-def get_loss(X,y,w,p):
+    Parameters:
+    X : np.ndarray
+        Input data of shape (m, n).
+    y : np.ndarray
+        Target values of shape (m, 1).
+    w : np.ndarray
+        Weights of shape (n, 1).
+    p : int
+        Norm order (default is 2).
+
+    Returns:
+    loss : float
+        Computed loss.
+
+    """        
+    
     pass
 
-def get_gradient(X,y,w,p):
+
+def get_gradient(X, y, w, p=2):
+
+    """
+    Compute gradient.
+
+    Parameters:
+    X : np.ndarray
+        Input data of shape (m, n).
+    y : np.ndarray
+        Target values of shape (m, 1).
+    w : np.ndarray
+        Weights of shape (n, 1).
+    p : int
+        Norm order (default is 2).
+
+    Returns:
+    grad : np.ndarray
+        Gradient of shape (n, 1).
+
+    """  
+
     pass
 
-def get_gradient_finite_differences(X,y,w,p,e):
+def get_gradient_finite_differences(X, y, w, p=2, epsilon=1e-5):
+
+    """
+    Compute gradient using finite differences.
+
+    Parameters:
+    X : np.ndarray
+        Input data of shape (m, n).
+    y : np.ndarray
+        Target values of shape (m, 1).
+    w : np.ndarray
+        Weights of shape (n, 1).
+    p : int
+        Norm order (default is 2).
+    epsilon : float
+        Small perturbation for finite differences.
+
+    Returns:
+    grad : np.ndarray
+        Gradient of shape (n, 1).
+
+    """
+
     pass
 
+def compute_jacobian(f, x, epsilon=1e-5):
+    
+    """
+    Compute Jacobian of vector-valued function f at point x using finite differences.
+    
+    Parameters:
+    f : callable
+        Function that takes a vector x and returns a vector y.
+    x : np.ndarray
+        Point at which to compute the Jacobian.
+    epsilon : float
+        Small perturbation for finite differences.
+
+    Returns:
+    J : np.ndarray
+        Jacobian matrix of shape (m, n) where m is the size of f(x) and n is the size of x.
+
+    
+    """
+
+    pass
 
 if __name__ == "__main__":
-    # Generate dataset
-    w_real = np.array([[1.75,1.2]]).T
+    
+    np.random.seed(42)
+    p = 1 
+
+
+    w_real = np.array([[1.0], [0.5], [2.0]])
     X, y = generate_dataset(w_real)
 
-    # Compare the analytical gradient with the numerical gradient
-    w_check = np.array([[1.7,1]]).T
-    grad_analytical = get_gradient(X,y,w_check,2)
-    grad_numerical = get_gradient_finite_differences(X,y,w_check,2,0.001)
-    print(np.isclose(grad_analytical, grad_numerical))
+    # Check gradient
+    w_check = np.array([[0.9], [0.4], [1.8]])
+    grad_analytical = get_gradient(X, y, w_check)
+    grad_numerical = get_gradient_finite_differences(X, y, w_check)
+    grad_matched = np.allclose(grad_analytical, grad_numerical, atol=1e-4)
+    assert grad_matched, "Gradient check failed!"
+    print("Gradient check:", grad_matched)
 
+    # Gradient descent
+    w = np.random.randn(3,1)
+    lr = 0.0001
+    e = 0.000001
+    losses = []
+    for i in range(1000):
+        losses.append(get_loss(X, y, w))
+        grad = get_gradient(X, y, w)
+        w -= lr * grad
+        if i > 1 and abs(losses[-1] - losses[-2]) < e:
+            break
 
-    # Train the model using the gradient descent method
-    w_solution=np.array([[1],[1]]) # starting solution
-    p = 1
-    lr = 0.001 # learning rate, feel free to adjust it, when the optimizer fails to converge
-    loss = []
-    e = 0.00001
-    for i in range(10000):
-        loss.append(get_loss(X,y,w_solution,p))
-        grad = get_gradient(X,y,w_solution,p)
-        w_solution = w_solution - lr*grad
-        if len(loss)>1 and abs(loss[-1]-loss[-2])< e:
-                break
+    # Plot convergence
+    plt.figure()
+    plt.plot(losses)
+    plt.title("Loss during training")
 
-    plt.figure(2)
-    plt.plot(loss)
-
-    plt.figure(3)
-    plt.scatter(X[:,0],y)
-    plt.plot(X[:,0], X@w_real)
-    plt.plot(X[:,0],X@w_solution, c='r')
+    # Predictions
+    plt.figure()
+    plt.scatter(X[:, 0], y, label="Data")
+    x_vals = np.linspace(-5, 5, 100)[:, None]
+    X_plot = np.hstack((x_vals, x_vals**2, np.ones_like(x_vals)))
+    plt.plot(x_vals, X_plot @ w_real, label="True model")
+    plt.plot(x_vals, X_plot @ w, 'r--', label="Learned model")
+    plt.legend()
+    plt.title("Model fit")
     plt.show()
 
+    # Jacobian 
+    def pred_func(w_flat):
+        w_vec = w_flat.reshape(3,1)
+        return X @ w_vec
 
-
-
-
+    J = compute_jacobian(pred_func, w.flatten())
+    print("Jacobian shape:", J.shape)
+    print("Jacobian at w:", J)
