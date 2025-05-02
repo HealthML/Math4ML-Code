@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "matplotlib",
+#     "numpy",
+# ]
+# ///
 import numpy as np
 import matplotlib.pyplot as plt
 
