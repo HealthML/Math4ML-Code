@@ -11,6 +11,8 @@ def generate_3d_data(n=100):
     return np.random.multivariate_normal(mean, cov, n)
 
 def SVD(X):
+    # SVD is like matrix yoga — stretching into U, Σ, and V^T poses.
+
     # Step 1: Center data
     # Step 2: Compute covariance matrix C (C = X^T @ X)
     # Step 3: Eigen decomposition of C (Hint: np.linalg.eigh)
@@ -22,6 +24,8 @@ def SVD(X):
     pass
 
 def PCA(data, k=2):
+    # Warning: PCA may cause dimensionality reduction addiction.
+
     # Step 1: Center the data
     # Step 2: Compute the covariance matrix of the centered data (Hint: np.cov)
     # Step 3: Compute eigenvalues and eigenvectors of the covariance matrix (use np.linalg.eigh)
