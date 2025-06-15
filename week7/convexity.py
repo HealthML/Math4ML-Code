@@ -39,7 +39,7 @@ def plot_with_secant(f, name):
 
 def second_derivative(f, x, h=1e-4):
     try:
-        return (f(x + h) - 2 * f(x) + f(x - h)) / (h ** 2)
+        return (f(x + 2*h) - 2 * f(x+h) + f(x)) / (h ** 2)
     except:
         return None
 
